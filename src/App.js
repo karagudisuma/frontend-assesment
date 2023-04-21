@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, useState } from "react";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [userData, setUserData] = useState({});
+
+  useEffect(() => {
+    async function fetchUsers() {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      await response.json().then(async (data) => {
+        let userWithImageData = await Promise.all(
+          data.map(async (user) => {
+            const imgResponse = await fetch(
+              "https://avatars.dicebear.com/v2/avataaars/{{username}}.svg?options[mood][]=happy"
+            );
+            let imgData = await imgResponse.blob();
+            let imgURL = URL.createObjectURL(imgData);
+            return {
+              ...user,
+              imgURL,
+              liked: false,
+            };
+          })
+        );
+        setUserData(userWithImageData);
+      });
+    }
+    fetchUsers();
+
+    return () => {
+      if (userData?.length == 0) return;
+      for (let i = 0; i < userData.length; i++) {
+        if (userData[i]?.imgURL) URL.revokeObjectURL(userData[i].imgURL);
+      }
+    };
+  }, []);
+
+  return <div>Main page</div>;
 }
 
 export default App;
