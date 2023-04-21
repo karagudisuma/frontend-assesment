@@ -1,0 +1,12 @@
+.description{
+  display: flex;
+  flex-direction: column;
+}
+
+.desc-element{
+  display: flex;
+}
+
+.desc-name{
+  color: #000000d9;
+}

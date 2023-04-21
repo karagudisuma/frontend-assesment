@@ -3,17 +3,12 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
+import Loader from "./Loader";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Suspense
-      fallback={
-        <div>
-          <p>Loading...</p>
-        </div>
-      }
-    >
+    <Suspense fallback={<Loader />}>
       <App />
     </Suspense>
   </React.StrictMode>

@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { Col, Row } from "antd";
+import { Suspense, useEffect, useState } from "react";
+import Loader from "./Loader";
+import UserCard from "./UserCard";
+import "./App.css";
 
 function App() {
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState([]);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -12,7 +16,7 @@ function App() {
         let userWithImageData = await Promise.all(
           data.map(async (user) => {
             const imgResponse = await fetch(
-              "https://avatars.dicebear.com/v2/avataaars/{{username}}.svg?options[mood][]=happy"
+              `https://avatars.dicebear.com/v2/avataaars/${user.username}.svg?options[mood][]=happy`
             );
             let imgData = await imgResponse.blob();
             let imgURL = URL.createObjectURL(imgData);
@@ -29,14 +33,29 @@ function App() {
     fetchUsers();
 
     return () => {
-      if (userData?.length == 0) return;
+      if (userData?.length === 0) return;
       for (let i = 0; i < userData.length; i++) {
         if (userData[i]?.imgURL) URL.revokeObjectURL(userData[i].imgURL);
       }
     };
   }, []);
 
-  return <div>Main page</div>;
+  console.log(userData);
+  return (
+    <div className="container">
+      <Suspense fallback={<Loader />}>
+        <Row gutter={[32, 32]}>
+          {userData.map((user) => {
+            return (
+              <Col className="gutter-row" span={6}>
+                <UserCard key={user.id} user={user} />
+              </Col>
+            );
+          })}
+        </Row>
+      </Suspense>
+    </div>
+  );
 }
 
 export default App;
