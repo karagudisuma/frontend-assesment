@@ -14,21 +14,30 @@ import { useState } from "react";
 
 const { Meta } = Card;
 
-const UserCard = ({ user, cbHandleLike, cbHandleDelete }) => {
+const UserCard = ({ user, dispatch }) => {
   const { imgURL, name, id, email, phone, website, liked } = user;
-
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const handleOk = (values) => {
+    dispatch({ type: "UPDATE_USER", user: { ...user, ...values } });
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const handleLike = () => {
+    const updatedLike = !user.liked;
+    dispatch({ type: "UPDATE_USER", user: { ...user, liked: updatedLike } });
+  };
+
+  const handleDelete = () => {
+    dispatch({ type: "DELETE_USER", id: user.id });
   };
 
   return (
@@ -44,13 +53,13 @@ const UserCard = ({ user, cbHandleLike, cbHandleDelete }) => {
             {liked ? (
               <HeartFilled
                 key="heart-filled"
-                onClick={() => cbHandleLike(id)}
+                onClick={handleLike}
                 style={{ fontSize: "20px", color: "red" }}
               />
             ) : (
               <HeartOutlined
                 key="heart"
-                onClick={() => cbHandleLike(id)}
+                onClick={handleLike}
                 style={{ fontSize: "20px", color: "red" }}
               />
             )}
@@ -63,7 +72,7 @@ const UserCard = ({ user, cbHandleLike, cbHandleDelete }) => {
           <DeleteFilled
             key="delete"
             style={{ fontSize: "18px" }}
-            onClick={() => cbHandleDelete(id)}
+            onClick={handleDelete}
           />,
         ]}
       >
@@ -89,7 +98,7 @@ const UserCard = ({ user, cbHandleLike, cbHandleDelete }) => {
       </Card>
       <EditModal
         isModalOpen={isModalOpen}
-        cbHandleOk={(values) => handleOk(values)}
+        cbHandleOk={handleOk}
         cbHandleCancel={handleCancel}
         user={user}
       />

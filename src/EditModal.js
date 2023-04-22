@@ -3,27 +3,31 @@ import "./EditModal.css";
 
 const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
   let { name, id, email, phone, website } = user;
+  const [form] = Form.useForm();
 
-  const onFinish = (values) => {
-    cbHandleOk(values);
+  const handleOk = () => {
+    form.validateFields().then((values) => {
+      console.log(values);
+      cbHandleOk(values);
+    });
   };
 
   return (
     <Modal
       title="Basic Modal"
       open={isModalOpen}
-      onOk={onFinish}
+      onOk={handleOk}
       onCancel={cbHandleCancel}
       className="modal-custom-container"
     >
       <Form
-        name="basic"
+        form={form}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 500 }}
-        initialValues={{ remember: true }}
         // onFinish={onFinish}
         // onFinishFailed={onFinishFailed}
+        initialValues={{ name, email, phone, website }}
         autoComplete="off"
       >
         <Form.Item
@@ -37,7 +41,7 @@ const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
             },
           ]}
         >
-          <Input defaultValue={name} />
+          <Input />
         </Form.Item>
         <Form.Item
           label="Email"
@@ -75,10 +79,6 @@ const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
             {
               required: true,
               message: "This field is required",
-            },
-            {
-              type: "url",
-              message: "Invalid website name",
             },
           ]}
         >

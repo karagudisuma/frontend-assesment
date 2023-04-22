@@ -1,11 +1,16 @@
 import { Col, Row } from "antd";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useReducer, useState } from "react";
 import Loader from "./Loader";
 import UserCard from "./UserCard";
 import "./App.css";
+import useUserState from "./UserState";
 
 function App() {
-  const [userData, setUserData] = useState([]);
+  // const [userData, setUserData] = useState([]);
+  const { state, dispatch } = useUserState();
+  let userData = state?.userData || [];
+
+  console.log(state);
 
   useEffect(() => {
     async function fetchUsers() {
@@ -27,7 +32,9 @@ function App() {
             };
           })
         );
-        setUserData(userWithImageData);
+        // setUserData(userWithImageData);
+        console.log(userWithImageData);
+        dispatch({ type: "ADD_USER", payload: userWithImageData });
       });
     }
     fetchUsers();
@@ -38,27 +45,27 @@ function App() {
         if (userData[i]?.imgURL) URL.revokeObjectURL(userData[i].imgURL);
       }
     };
-  }, []);
+  }, [dispatch]);
 
-  const handleLike = (id) => {
-    let index = userData.findIndex((u) => u.id === id);
-    let updatedLike = !userData[index].liked;
-    let modifiedData = [
-      ...userData.slice(0, index),
-      { ...userData[index], liked: updatedLike },
-      ...userData.slice(index + 1),
-    ];
-    setUserData(modifiedData);
-  };
+  // const handleLike = (id) => {
+  //   let index = userData.findIndex((u) => u.id === id);
+  //   let updatedLike = !userData[index].liked;
+  //   let modifiedData = [
+  //     ...userData.slice(0, index),
+  //     { ...userData[index], liked: updatedLike },
+  //     ...userData.slice(index + 1),
+  //   ];
+  //   setUserData(modifiedData);
+  // };
 
-  const handleDelete = (id) => {
-    let index = userData.findIndex((u) => u.id === id);
-    let modifiedData = [
-      ...userData.slice(0, index),
-      ...userData.slice(index + 1),
-    ];
-    setUserData(modifiedData);
-  };
+  // const handleDelete = (id) => {
+  //   let index = userData.findIndex((u) => u.id === id);
+  //   let modifiedData = [
+  //     ...userData.slice(0, index),
+  //     ...userData.slice(index + 1),
+  //   ];
+  //   setUserData(modifiedData);
+  // };
 
   return (
     <div className="container">
@@ -70,8 +77,9 @@ function App() {
                 <UserCard
                   key={user.id}
                   user={user}
-                  cbHandleLike={handleLike}
-                  cbHandleDelete={handleDelete}
+                  dispatch={dispatch}
+                  // cbHandleLike={handleLike}
+                  // cbHandleDelete={handleDelete}
                 />
               </Col>
             );
