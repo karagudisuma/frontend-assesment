@@ -6,10 +6,7 @@ const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
   const [form] = Form.useForm();
 
   const handleOk = () => {
-    form.validateFields().then((values) => {
-      console.log(values);
-      cbHandleOk(values);
-    });
+    form.validateFields().then((values) => cbHandleOk(values));
   };
 
   return (
@@ -22,11 +19,9 @@ const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
     >
       <Form
         form={form}
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
+        labelCol={{ xs: 24, sm: 8 }}
+        wrapperCol={{ xs: 24, sm: 16 }}
         style={{ maxWidth: 500 }}
-        // onFinish={onFinish}
-        // onFinishFailed={onFinishFailed}
         initialValues={{ name, email, phone, website }}
         autoComplete="off"
       >
@@ -57,7 +52,7 @@ const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
             },
           ]}
         >
-          <Input defaultValue={email} />
+          <Input />
         </Form.Item>
         <Form.Item
           label="Phone"
@@ -70,7 +65,7 @@ const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
             },
           ]}
         >
-          <Input defaultValue={phone} />
+          <Input />
         </Form.Item>
         <Form.Item
           label="Website"
@@ -82,7 +77,7 @@ const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
             },
           ]}
         >
-          <Input defaultValue={website} />
+          <Input />
         </Form.Item>
       </Form>
     </Modal>
