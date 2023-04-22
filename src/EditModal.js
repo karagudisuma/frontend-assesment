@@ -2,7 +2,7 @@ import { Form, Input, Modal } from "antd";
 import "./EditModal.css";
 
 const EditModal = ({ isModalOpen, cbHandleOk, cbHandleCancel, user }) => {
-  let { name, id, email, phone, website } = user;
+  let { name, email, phone, website } = user;
   const [form] = Form.useForm();
 
   const handleOk = () => {

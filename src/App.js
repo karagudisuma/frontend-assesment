@@ -1,5 +1,5 @@
 import { Col, Row } from "antd";
-import { Suspense, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Loader from "./Loader";
 import UserCard from "./UserCard";
 import "./App.css";
@@ -7,32 +7,37 @@ import useUserState from "./UserState";
 
 function App() {
   const { state, dispatch } = useUserState();
-  let userData = state?.userData || [];
-
-  console.log(state);
+  const [isLoading, setLoading] = useState(true);
+  let userData = state?.userData;
 
   useEffect(() => {
     async function fetchUsers() {
-      const response = await fetch(
-        "https://jsonplaceholder.typicode.com/users"
-      );
-      await response.json().then(async (data) => {
-        let userWithImageData = await Promise.all(
-          data.map(async (user) => {
-            const imgResponse = await fetch(
-              `https://avatars.dicebear.com/v2/avataaars/${user.username}.svg?options[mood][]=happy`
-            );
-            let imgData = await imgResponse.blob();
-            let imgURL = URL.createObjectURL(imgData);
-            return {
-              ...user,
-              imgURL,
-              liked: false,
-            };
-          })
+      try {
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/users"
         );
-        dispatch({ type: "ADD_USER", payload: userWithImageData });
-      });
+        await response.json().then(async (data) => {
+          let userWithImageData = await Promise.all(
+            data.map(async (user) => {
+              const imgResponse = await fetch(
+                `https://avatars.dicebear.com/v2/avataaars/${user.username}.svg?options[mood][]=happy`
+              );
+              let imgData = await imgResponse.blob();
+              let imgURL = URL.createObjectURL(imgData);
+              return {
+                ...user,
+                imgURL,
+                liked: false,
+              };
+            })
+          );
+          dispatch({ type: "ADD_USER", payload: userWithImageData });
+        });
+      } catch (err) {
+        throw err;
+      } finally {
+        setLoading(false);
+      }
     }
     fetchUsers();
 
@@ -46,7 +51,9 @@ function App() {
 
   return (
     <div className="container">
-      <Suspense fallback={<Loader />}>
+      {isLoading ? (
+        <Loader />
+      ) : (
         <Row gutter={[32, 32]}>
           {userData.map((user) => {
             return (
@@ -65,7 +72,7 @@ function App() {
             );
           })}
         </Row>
-      </Suspense>
+      )}
     </div>
   );
 }

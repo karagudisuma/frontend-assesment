@@ -3,7 +3,6 @@ import { useReducer } from "react";
 const initialState = { userData: [] };
 
 function reducer(state, action) {
-  console.log(state, action);
   switch (action.type) {
     case "ADD_USER":
       return {
