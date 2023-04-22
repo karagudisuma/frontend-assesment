@@ -40,15 +40,25 @@ function App() {
     };
   }, []);
 
-  console.log(userData);
+  const handleLike = (id) => {
+    let index = userData.findIndex((u) => u.id === id);
+    let updatedLike = !userData[index].liked;
+    let modifiedData = [
+      ...userData.slice(0, index),
+      { ...userData[index], liked: updatedLike },
+      ...userData.slice(index + 1),
+    ];
+    setUserData(modifiedData);
+  };
+
   return (
     <div className="container">
       <Suspense fallback={<Loader />}>
         <Row gutter={[32, 32]}>
           {userData.map((user) => {
             return (
-              <Col className="gutter-row" span={6}>
-                <UserCard key={user.id} user={user} />
+              <Col key={user.id} className="gutter-row" span={6}>
+                <UserCard key={user.id} user={user} cbHandleLike={handleLike} />
               </Col>
             );
           })}

@@ -2,45 +2,60 @@ import {
   DeleteOutlined,
   EditOutlined,
   GlobalOutlined,
+  HeartFilled,
   HeartOutlined,
   MailOutlined,
   PhoneOutlined,
 } from "@ant-design/icons";
-import { Avatar, Card } from "antd";
+import { Card } from "antd";
 import "./UserCard.css";
 
 const { Meta } = Card;
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, cbHandleLike, key }) => {
   const { imgURL, name, id, email, phone, username, website, liked } = user;
   return (
     <Card
-      // style={{ background-color }}
-      cover={<img alt={name} src={imgURL} />}
-      bodyStyle={{}}
+      style={{ border: "1px solid #e8e8e8", borderRadius: 0 }}
+      className="card-container"
+      cover={<img alt={name} src={imgURL} width="200px" height="200px" />}
       bordered={false}
+      key={key}
       actions={[
-        <HeartOutlined key="heart" />,
-        <EditOutlined key="edit" />,
-        <DeleteOutlined key="delete" />,
+        <div className="action-container">
+          {liked ? (
+            <HeartFilled
+              key="heart-filled"
+              onClick={() => cbHandleLike(id)}
+              style={{ fontSize: "20px", color: "red" }}
+            />
+          ) : (
+            <HeartOutlined
+              key="heart"
+              onClick={() => cbHandleLike(id)}
+              style={{ fontSize: "20px", color: "red" }}
+            />
+          )}
+        </div>,
+        <EditOutlined key="edit" style={{ fontSize: "18px" }} />,
+        <DeleteOutlined key="delete" style={{ fontSize: "18px" }} />,
       ]}
     >
       <Meta
-        // title="Card title"
         description={
           <div className="description">
-            <div className="desc-name">{name}</div>
+            <h3>{name}</h3>
             <div className="desc-element">
-              <MailOutlined />
-              {email}
+              <MailOutlined style={{ fontSize: "18px" }} />
+              <p>{email}</p>
             </div>
             <div className="desc-element">
-              <PhoneOutlined />
-              {phone}
+              <PhoneOutlined style={{ fontSize: "18px" }} />
+              <p>{phone}</p>
             </div>
             <div className="desc-element">
-              <GlobalOutlined />
-              {website}
+              <GlobalOutlined style={{ fontSize: "18px" }} />
+              <p>http://{website}</p>
             </div>
           </div>
         }

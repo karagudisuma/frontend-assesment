@@ -1,12 +1,42 @@
+.card-container .ant-card-cover{
+  background-color: #f5f5f5;
+  border-radius: 0px;
+  text-align: center;
+}
+
+  
 .description{
   display: flex;
   flex-direction: column;
+  color: rgba(0, 0, 0, 0.85);
 }
 
 .desc-element{
   display: flex;
+  font-weight: 400;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin: 2px 0px;
+  color: #000000a6;
 }
 
-.desc-name{
-  color: #000000d9;
+.desc-element p {
+  margin: 0px 10px;
+}
+.description h3{
+  font-weight: 500;
+  margin: 5px 0px;
+}
+
+.action-container{
+  background-color: #fafafa;
+  margin: 0px;
+}
+
+.card-container .ant-card-actions{
+  background-color: #fafafa;
+}
+
+.card-container .ant-card-actions li:not(:last-child){
+  border-right: 1px solid #e8e8e8;
 }
