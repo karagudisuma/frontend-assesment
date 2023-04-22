@@ -51,6 +51,15 @@ function App() {
     setUserData(modifiedData);
   };
 
+  const handleDelete = (id) => {
+    let index = userData.findIndex((u) => u.id === id);
+    let modifiedData = [
+      ...userData.slice(0, index),
+      ...userData.slice(index + 1),
+    ];
+    setUserData(modifiedData);
+  };
+
   return (
     <div className="container">
       <Suspense fallback={<Loader />}>
@@ -58,7 +67,12 @@ function App() {
           {userData.map((user) => {
             return (
               <Col key={user.id} className="gutter-row" span={6}>
-                <UserCard key={user.id} user={user} cbHandleLike={handleLike} />
+                <UserCard
+                  key={user.id}
+                  user={user}
+                  cbHandleLike={handleLike}
+                  cbHandleDelete={handleDelete}
+                />
               </Col>
             );
           })}
