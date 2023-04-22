@@ -8,7 +8,7 @@ import useUserState from "./UserState";
 function App() {
   const { state, dispatch } = useUserState();
   const [isLoading, setLoading] = useState(true);
-  let userData = state?.userData;
+  let userData = state?.userData || [];
 
   useEffect(() => {
     async function fetchUsers() {
